@@ -1,3 +1,2 @@
-Hello World!
-
-This is a test repository.
+My class scripts.
+Need to add comments.
