@@ -1,0 +1,37 @@
+# This is modified version of calculator script which
+# uses functions to do calculations.
+# The multiplication and division functionality needs some work
+# will update later.
+
+#!/bin/bash
+echo $2
+function add()
+{
+	echo `expr $1 + $2`
+}
+
+function subtract()
+{
+	echo `expr $1 - $2`
+}
+
+function multiply()
+{
+	echo `expr $1 \* $2`
+}
+
+function divide()
+{
+	echo `expr $1 \/ $2`
+}
+
+echo $2
+case $2 in
+	'+') result=$(add $1 $3);;
+	'-') result=$(subtract $1 $3);;
+	'\*') result=$(multiply $1 $3);;
+	'\/') result=$(divide $1 $3);;
+	*) echo "You did not select a valid operation. Syntax: calc number [+-*/] number";;
+esac
+
+echo $result
