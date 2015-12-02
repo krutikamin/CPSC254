@@ -1,0 +1,47 @@
+#!/bin/bash
+
+file="output.txt"
+seperator="---------------------------------------------------------------"
+
+if [ -f "$file" ]; then
+        rm $file
+else
+        touch $file
+fi
+
+number=0
+total=0
+
+for (( i, p = 0; $number >= 0; i++, p++ ))
+do
+        echo -n "Enter a number (negative to quit): "
+        read number
+
+        if [ $number -lt 0 ]; then
+                if [ $i -eq 0 ]; then
+                        echo "No numbers entered"
+                        exit 2
+                else
+                        result=$(awk "BEGIN {printf \"%.2f\", $total/$p}")
+                        echo "There are $i numbers with an average of $result" >> $file
+                        echo $seperator
+                        echo "Below are the contents of the ouput textfile $file"
+                        cat $file
+                        echo $seperator
+                        exit 1
+                fi
+        elif [ $number -eq 0 ]; then
+                echo "" >> $file
+                p=`expr $p-1`
+        else
+                total=`expr $number + $total`
+
+                for(( temp = $number; temp > 0; temp-- ))
+                do
+                        echo -n "#" >> $file
+                done
+                echo "" >> $file
+        fi
+done
+
+
