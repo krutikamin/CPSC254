@@ -1,0 +1,71 @@
+#!/bin/bash
+
+
+numDirs=0
+
+function DisplayHelp()
+{
+	echo
+	echo "myTree recursively displays the directory and its contents unless otherwise instructed"
+	echo 
+	echo "Usage: myTree [TOKEN] [DIRECTORY]"
+	echo
+	echo "TOKEN -"
+	echo "	-d - To display directories only"
+	echo "	--help - To display this help page"
+}
+
+function DisplayTree
+{
+#	find . -type d -exec echo "|--{}" + -or -type f -exec echo "|--{}" +
+#	find . -type d -exec echo "|--{}" \;
+#	echo "---------------------------"
+#	echo "In function DisplayTree"
+#	echo "\$1 = $1"
+#	echo "\$2 = $2"
+#	for temp in "$2"; do
+#		echo "!--$temp"
+#		if [ -d $temp ]; then
+#			cd "${temp}"
+#			temp="$2$temp"
+#			echo $temp
+#			DisplayTree $1 $pwd
+#			echo $temp
+#		fi
+#	done
+#
+#	echo $IFS
+	oldIFS=$IFS
+	IFS=$'\n'
+	for f in "$@"
+	do
+		echo "|--$f"
+		if [ -d "${f}" ]; then #-a "$1" == "TRUE" ]; then
+			numDirs=$numDirs+1
+			cd "${f}"
+			DisplayTree $(ls -1 ".")
+			cd ..
+		fi
+	#echo "$numDirs Directories"
+	done
+	IFS=$oldIFS
+	echo "$numDirs Directories"
+}
+
+if [ "$1" == "--help" ]; then
+	DisplayHelp
+elif [ "$1" == "-d" ]; then
+	temp=$(pwd)
+	if [ $# -lt 2 ]; then
+		#DisplayTree FALSE $temp 
+		DisplayTree $temp 
+	else
+		#DisplayTree FALSE $2
+		DisplayTree $temp 
+	fi
+elif [ $# -eq 1 ]; then
+	#DisplayTree TRUE $1
+	DisplayTree $1
+else
+	DisplayHelp
+fi

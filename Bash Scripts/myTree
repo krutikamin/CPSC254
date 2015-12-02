@@ -1,0 +1,59 @@
+#!/bin/bash
+
+numDirs=0
+numFiles=0
+
+function DisplayDir()
+{
+	ls "$1" | while read i; do
+		if [ -d "$1/$i" ]; then
+			export numDirs=$(($numDirs+1))
+			echo "|--$i/"
+		fi
+	done
+	echo "$numDirs directories"
+}
+
+function DisplayHelp()
+{
+	echo
+	echo "myTree recursively displays the directory and its contents unless otherwise instructed"
+	echo 
+	echo "Usage: myTree [TOKEN] [DIRECTORY]"
+	echo
+	echo "TOKEN -"
+	echo "	-d - To display directories only"
+	echo "	--help - To display this help page"
+}
+
+function DisplayTree()
+{
+# SOURCE - http://rosettacode.org/wiki/Walk_a_directory/Recursively
+	ls "$1" | while read i; do
+		if [ -d "$1/$i" ]; then
+			export numDirs=$(($numDirs+1))
+			echo "|--$i/"
+			DisplayTree "$1/$i" "$2"
+		else
+			export numFiles=$(($numFiles+1))
+			echo "|--$i"
+		fi
+	done
+}
+
+if [ "$1" == "--help" ]; then
+	DisplayHelp
+elif [ "$1" == "-d" ]; then
+	temp=$(pwd)
+	if [ $# -lt 2 ]; then # Display tree of pwd if no directory provided
+		DisplayTree $temp  
+	else
+		DisplayDir $2
+	fi
+elif [ $# -eq 1 ]; then
+	DisplayTree $1
+else
+	DisplayHelp
+fi
+
+echo "$numDirs Directories and $numFiles files"
